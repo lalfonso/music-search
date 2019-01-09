@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import styled from 'styled-components';
 
 const SearchContainer = styled.div`
@@ -17,19 +17,36 @@ const Input = styled.input`
     border: 2px #BBB solid;
 `;
 
+let timeout;
 
-function Search(props) {
-    return (
-        <SearchContainer>
-            <Title>
-                Music Search
-            </Title>
-            <Input type="text"
-                placeholder={props.placeholder}
-                onChange={props.onChangeValue}
-            />
-        </SearchContainer>
-    )
+class Search extends Component {
+
+    constructor(props) {
+        super(props);
+    }
+
+    handleOnChange = (e) => {
+        if (timeout) { clearTimeout(timeout); }
+        const str = e.target.value;
+        timeout = setTimeout(() => {
+            this.props.onChangeValue(str);
+        }, this.props.debunce);
+    }
+
+    render() {
+        return (
+            <SearchContainer>
+                <Title>
+                    {this.props.titleText}
+                </Title>
+                <Input type="text"
+                    placeholder={this.props.placeholder}
+                    onChange={this.handleOnChange}
+                />
+            </SearchContainer>
+        )
+    }
+
 }
 
 export default Search;

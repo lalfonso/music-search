@@ -45,8 +45,10 @@ To learn React, check out the [React documentation](https://reactjs.org/).
 
 TODO:
 
-* Card Degradee styling
-* Debunce
+* Card Degradee styling - DONE
+* Debunce - DONE
+* Include Redux
 * Loading
 * Details Page
 * Notification Popup
+* Infinite Scroll

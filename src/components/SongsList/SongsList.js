@@ -15,10 +15,7 @@ function SongsList(props) {
             {props.list.map((item, idx) =>
                 <SongCard
                     key={idx}
-                    name={item.name}
-                    artist={item.artist}
-                    url={item.url}
-                    img={item.image[2]['#text']}
+                    item={item}
                 ></SongCard>
             )}
         </ListWrapper>

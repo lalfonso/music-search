@@ -10,6 +10,10 @@ const Header = styled.section`
     padding: 20px 0px;
 `
 
+const API_KEY = '0b752c3927e93e737ebf660eb430c83d';
+
+let timeout;
+
 class Music extends Component {
 
     constructor(props) {
@@ -17,6 +21,7 @@ class Music extends Component {
         this.state = {
             searchStr: "",
             results: [],
+            albumDetails: null,
             searching: false,
             debunce: 500
         }
@@ -33,9 +38,9 @@ class Music extends Component {
 
     getDataWithAxios(queryString) {
         this.setState({
-            searching: true    
+            searching: true
         })
-        axios.get(`http://ws.audioscrobbler.com/2.0/?method=album.search&album=${queryString}&api_key=0b752c3927e93e737ebf660eb430c83d&format=json`)
+        axios.get(`http://ws.audioscrobbler.com/2.0/?method=album.search&album=${queryString}&api_key=${API_KEY}&format=json`)
             .then(result => {
                 this.setState({
                     results: result.data.results.albummatches.album,
@@ -44,8 +49,8 @@ class Music extends Component {
             })
     }
 
-    handleChange = (e) => {
-        this.getDataWithAxios(e.target.value);
+    handleChange = (str) => {
+        this.getDataWithAxios(str);
     }
 
     render() {
@@ -53,6 +58,7 @@ class Music extends Component {
             <div>
                 <Header>
                     <Search
+                        titleText="Music Search"
                         placeholder="Plese enter a band"
                         onChangeValue={this.handleChange}
                         searching={this.state.searching}

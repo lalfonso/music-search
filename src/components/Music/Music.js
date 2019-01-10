@@ -3,6 +3,7 @@ import Search from '../Search/Search';
 import SongsList from '../SongsList/SongsList';
 import axios from 'axios';
 import styled from 'styled-components';
+
 import { HEADER_COLOR } from '../../constants';
 
 const Header = styled.section`

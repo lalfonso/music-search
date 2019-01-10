@@ -1,8 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
-import Detail from '../Detail/Detail';
+import { connect } from 'react-redux';
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 
+import { addToList } from '../../actions'
 
 const Card = styled.div`
     position: relative;
@@ -23,11 +24,16 @@ const Card = styled.div`
 const CardDescription = styled.div`
     position: absolute;
     color: white;
-    font-size: ${props => props.size | '10'}px;
+    font-size: ${props => props.size || '10'}px;
     left: ${props => props.left}px;
+    top: ${props => props.top}px;
     bottom: ${props => props.bottom}px;
     text-shadow: 0 0 10px rgba(0,0,0,.8);
     z-index: 1;
+`
+
+const ClickableDescription = styled(CardDescription)`
+    cursor: pointer;
 `
 
 const LinkDescription = styled(CardDescription)`
@@ -35,32 +41,51 @@ const LinkDescription = styled(CardDescription)`
         color: #EEE;
     }
 `
+class SongCard extends React.Component {
 
-function SongCard(props) {
-    return (
-        <Card>
-            {props.item && props.item.image[2]['#text'] && <img src={props.item.image[2]['#text']} />}
-            <CardDescription
-                left="20"
-                bottom="35"
-                size="14"
-            >{props.item.artist}
-            </CardDescription>
+    constructor(props) {
+        super(props);
+    }
 
-            <LinkDescription
-                left="20"
-                bottom="20"
-            >
-                <Link to={`/detail/${props.item.artist}/${props.item.name}`}>{props.item.name}</Link>
-           
-            </LinkDescription>
+    render() {
+        return (
+            <Card>
+                {this.props.item && this.props.item.image[2]['#text'] && <img src={this.props.item.image[2]['#text']} />}
+                <ClickableDescription
+                    left="20"
+                    top="20"
+                    size="24"
+                    onClick={this.props.onAddToList}
+                >Add
+                </ClickableDescription>
+                <CardDescription
+                    left="20"
+                    bottom="35"
+                    size="14"
+                >{this.props.item.artist}
+                </CardDescription>
 
-            
+                <LinkDescription
+                    left="20"
+                    bottom="20"
+                >
+                    <Link to={`/detail/${this.props.item.artist}/${this.props.item.name}`}>{this.props.item.name}</Link>
 
-        </Card>
-    )
+                </LinkDescription>
+            </Card>
+        )
+    }
 }
 
+const mapDispatchToProps = (dispatch, ownProps) => {
+    return {
+        'onAddToList': () => {
+            dispatch(addToList(ownProps.item))
+        }
+    }
+}
 
-
-export default SongCard;
+export default connect(
+    null,
+    mapDispatchToProps
+)(SongCard);

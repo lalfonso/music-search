@@ -3,7 +3,10 @@ import Search from '../Search/Search';
 import SongsList from '../SongsList/SongsList';
 import axios from 'axios';
 import styled from 'styled-components';
+import { connect } from 'react-redux';
 
+import { START_SEARCH, FINISH_SEARCH } from '../../actionTypes';
+import { startSearch, finishSearch } from '../../actions';
 import { HEADER_COLOR } from '../../constants';
 
 const Header = styled.section`
@@ -20,10 +23,6 @@ class Music extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            searchStr: "",
-            results: [],
-            albumDetails: null,
-            searching: false,
             debunce: 500
         }
     }
@@ -31,22 +30,16 @@ class Music extends Component {
     getDataWithFecth(queryString) {
         fetch(`http://ws.audioscrobbler.com/2.0/?method=album.search&album=${queryString}&api_key=0b752c3927e93e737ebf660eb430c83d&format=json`)
             .then(response => {
-                console.log(response);
                 return response.json();
             })
             .then(result => console.log(result));
     }
 
     getDataWithAxios(queryString) {
-        this.setState({
-            searching: true
-        })
+        this.props.onStartSearching();
         axios.get(`http://ws.audioscrobbler.com/2.0/?method=album.search&album=${queryString}&api_key=${API_KEY}&format=json`)
             .then(result => {
-                this.setState({
-                    results: result.data.results.albummatches.album,
-                    searching: false
-                })
+                this.props.onFinishSearching(result.data.results.albummatches.album);
             })
     }
 
@@ -62,11 +55,11 @@ class Music extends Component {
                         titleText="Music Search"
                         placeholder="Plese enter a band"
                         onChangeValue={this.handleChange}
-                        searching={this.state.searching}
+                        //searching={this.props.searching}
                         debunce={this.state.debunce}
                     />
                 </Header>
-                <SongsList list={this.state.results} />
+                <SongsList list={this.props.results} />
                 {
                     //this.state.loading && <Loading />
                 }
@@ -75,4 +68,23 @@ class Music extends Component {
     }
 }
 
-export default Music;
+
+const mapDispathToProps = dispatch => (
+    {
+        onStartSearching: () => {
+            dispatch(startSearch())
+        },
+        onFinishSearching: (result) => {
+            dispatch(finishSearch(result))
+        }
+    }
+)
+
+const mapStateToProps = state => (
+    {
+        searching: state.searching,
+        results: state.searchResult
+    }
+)
+
+export default connect(mapStateToProps, mapDispathToProps)(Music);

@@ -1,8 +1,9 @@
-import { ADD_TO_LIST } from './actionTypes'
+import { ADD_TO_LIST, START_SEARCH, FINISH_SEARCH } from './actionTypes'
 
 const initialState = {
     searchResult: [],
-    selection: []
+    selection: [],
+    searching: false
 }
 
 export const reducer = (state = initialState, action) => {
@@ -12,6 +13,16 @@ export const reducer = (state = initialState, action) => {
                 ...state.selection,
                 action.payload.item
             ]
+        })
+    }
+    if (action.type === START_SEARCH) {
+        return Object.assign({}, state, {
+            searching: true
+        })
+    }
+    if (action.type === FINISH_SEARCH) {
+        return Object.assign({}, state, {
+            searchResult: action.payload.results
         })
     }
     return state;

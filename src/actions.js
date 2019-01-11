@@ -12,9 +12,8 @@ export const startSearch = () => ({
 })
 
 export const finishSearch = (results) => {
-
     return {
-        type: START_SEARCH,
+        type: FINISH_SEARCH,
         payload: {
             results
         }

@@ -5,16 +5,15 @@ import styled from 'styled-components';
 const ListWrapper = styled.div`
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
+    justify-content: flex-start;
 `;
 
 function SongsList(props) {
-    console.log(props)
     return (
         <ListWrapper>
             {props.list.map((item, idx) =>
                 <SongCard
-                    key={idx}
+                    key={item.artist + item.name}
                     item={item}
                 ></SongCard>
             )}

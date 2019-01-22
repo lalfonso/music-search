@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment} from 'react';
 import styled from 'styled-components';
 
 const SearchContainer = styled.div`
-    margin: 0 auto;
+    margin: 0 20%;
     width: 40%;
 `;
 
@@ -21,10 +21,6 @@ let timeout;
 
 class Search extends Component {
 
-    constructor(props) {
-        super(props);
-    }
-
     handleOnChange = (e) => {
         if (timeout) { clearTimeout(timeout); }
         const str = e.target.value;
@@ -35,15 +31,21 @@ class Search extends Component {
 
     render() {
         return (
-            <SearchContainer>
-                <Title>
-                    {this.props.titleText}
-                </Title>
-                <Input type="text"
-                    placeholder={this.props.placeholder}
-                    onChange={this.handleOnChange}
-                />
-            </SearchContainer>
+            <Fragment>
+                <SearchContainer>
+                    <Title>
+                        {this.props.titleText}
+                        {this.props.searching? ' Searching...':''}
+                    </Title>
+                    <Input type="text"
+                        placeholder={this.props.placeholder}
+                        onChange={this.handleOnChange}
+                        defaultValue={this.props.queryString}
+                    />
+                </SearchContainer>
+                {this.props.children}
+            </Fragment>
+
         )
     }
 

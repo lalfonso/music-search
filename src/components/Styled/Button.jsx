@@ -10,7 +10,7 @@ export const Button = styled.div`
     display: inline-block;
     font-size: 16px;
     cursor: pointer;
-    width: ${props => props.width || "auto"};
+    width: ${props => "calc(" + props.width + " - 64px)" || "auto"};
     height: 6px;
     line-height: 6px;
 `

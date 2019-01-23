@@ -8,6 +8,7 @@ import { startSearch, finishSearch, openModal, closeModal, changeQS } from '../.
 import { Button } from '../Styled/Button';
 import { Header } from '../Styled/Header';
 import Modal from '../Modal/Modal';
+import withFooter from '../hoc/withFooter'
 
 const API_KEY = '0b752c3927e93e737ebf660eb430c83d';
 
@@ -114,4 +115,6 @@ const mapStateToProps = state => (
     }
 )
 
-export default connect(mapStateToProps, mapDispathToProps)(Music);
+export default connect(mapStateToProps, mapDispathToProps)(
+   withFooter(Music, 30)
+);

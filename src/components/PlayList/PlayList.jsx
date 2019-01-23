@@ -6,6 +6,7 @@ import { openModal, closeModal, changeQS } from '../../actions';
 import { Button } from '../Styled/Button';
 import { Header } from '../Styled/Header';
 import Modal from '../Modal/Modal';
+import withFooter from '../hoc/withFooter';
 
 class PlayList extends Component {
 
@@ -33,7 +34,7 @@ class PlayList extends Component {
                         <div className="button" onClick={this.goBack}></div>
                     </Modal>
                 ) : null}
-                <Button width="95%" onClick={this.goBack}>
+                <Button width="100%" onClick={this.goBack}>
                     Go Back
                 </Button>
             </Fragment>
@@ -66,4 +67,4 @@ const mapStateToProps = state => (
     }
 )
 
-export default connect(mapStateToProps, mapDispathToProps)(PlayList);
+export default connect(mapStateToProps, mapDispathToProps)(withFooter(PlayList, 30));

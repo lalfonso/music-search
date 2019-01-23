@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
 
 import { Button } from '../Styled/Button';
 import { HEADER_COLOR } from '../../constants';
+import withFooter from '../hoc/withFooter';
 
 const API_KEY = '0b752c3927e93e737ebf660eb430c83d';
 
@@ -50,7 +51,7 @@ class Detail extends React.Component {
             .then(result => {
                 this.setState({
                     albumDetails: result.data.album,
-                    albumDuration: (result.data.album) ? 
+                    albumDuration: (result.data.album) ?
                         result.data.album.tracks.track.reduce((pv, cv) => (pv + Number(cv.duration)), 0) :
                         null
                 })
@@ -68,11 +69,11 @@ class Detail extends React.Component {
 
     render() {
         return (
-            <div>
+            <Fragment>
                 <DetailHeader>
                     <ImageContainer>
-                        {this.state.albumDetails && 
-                            <img src={this.state.albumDetails.image[3]['#text']} alt={this.props.match.params.album}/>
+                        {this.state.albumDetails &&
+                            <img src={this.state.albumDetails.image[3]['#text']} alt={this.props.match.params.album} />
                         }
                     </ImageContainer>
                     <TextContainer>
@@ -81,27 +82,30 @@ class Detail extends React.Component {
                     </TextContainer>
                 </DetailHeader>
 
-                {this.state.albumDetails && (
-                    <AlbumContainer>
-                        <h3>Album Duration <TimeStr secs={this.state.albumDuration} /> </h3>
-                        <span>Tracks:</span>
-                        <ul>
-                            {this.state.albumDetails && this.state.albumDetails.tracks.track.map((track, idx) => {
-                                return <li key={idx}>
-                                    <span>{track.name}. Duration: <TimeStr secs={track.duration} /></span>
-                                </li>
-                            })}
+                {this.state.albumDetails &&
 
-                        </ul>
-                        <Button width="95%" onClick={this.goBack}>
+                    <Fragment>
+                        <AlbumContainer>
+                            <h3>Album Duration <TimeStr secs={this.state.albumDuration} /> </h3>
+                            <span>Tracks:</span>
+                            <ul>
+                                {this.state.albumDetails && this.state.albumDetails.tracks.track.map((track, idx) => {
+                                    return <li key={idx}>
+                                        <span>{track.name}. Duration: <TimeStr secs={track.duration} /></span>
+                                    </li>
+                                })}
+
+                            </ul>
+
+                        </AlbumContainer>
+                        <Button width="100%" onClick={this.goBack}>
                             Go Back
                         </Button>
-                        <div className="button" onClick={this.goBack}></div>
-                    </AlbumContainer>
-                )}
-            </div>
+                    </Fragment>
+                }
+            </Fragment>
         )
     }
 }
 
-export default Detail;
+export default withFooter(Detail, 30);

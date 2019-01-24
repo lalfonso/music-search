@@ -5,7 +5,8 @@ const initialState = {
     selection: [],
     searching: false,
     showModal: false,
-    queryString: ""
+    queryString: "",
+    pageNumber: 1
 }
 
 export const reducer = (state = initialState, action) => {
@@ -31,7 +32,9 @@ export const reducer = (state = initialState, action) => {
         case FINISH_SEARCH:
             return Object.assign({}, state, {
                 searching: false,
-                searchResult: action.payload.results
+                searchResult: action.payload.concat ? 
+                    state.searchResult.concat(action.payload.results) :
+                    action.payload.results
             });
         case OPEN_MODAL:
             return Object.assign({}, state, {

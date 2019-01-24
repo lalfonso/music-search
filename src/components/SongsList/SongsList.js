@@ -13,10 +13,11 @@ function SongsList(props) {
         <ListWrapper>
             {props.list.map((item, idx) =>
                 <SongCard
-                    key={item.artist + item.name}
+                    key={`${item.artist} ${item.name}`}
                     item={item}
                 ></SongCard>
             )}
+            {props.children}
         </ListWrapper>
     )
 }

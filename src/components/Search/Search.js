@@ -21,6 +21,10 @@ let timeout;
 
 class Search extends Component {
 
+    componentDidMount() {
+        this.inputSearch.focus();
+    }
+
     handleOnChange = (e) => {
         if (timeout) { clearTimeout(timeout); }
         const str = e.target.value;
@@ -41,11 +45,11 @@ class Search extends Component {
                         placeholder={this.props.placeholder}
                         onChange={this.handleOnChange}
                         defaultValue={this.props.queryString}
+                        ref={ (inp) => this.inputSearch = inp}
                     />
                 </SearchContainer>
                 {this.props.children}
             </Fragment>
-
         )
     }
 

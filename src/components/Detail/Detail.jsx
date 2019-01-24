@@ -98,8 +98,8 @@ class Detail extends React.Component {
                             </ul>
 
                         </AlbumContainer>
-                        <Button width="100%" onClick={this.goBack}>
-                            Go Back
+                        <Button onClick={this.goBack}>
+                            &lt;&lt; Go Back
                         </Button>
                     </Fragment>
                 }

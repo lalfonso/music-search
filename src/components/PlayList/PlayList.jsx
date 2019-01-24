@@ -34,8 +34,8 @@ class PlayList extends Component {
                         <div className="button" onClick={this.goBack}></div>
                     </Modal>
                 ) : null}
-                <Button width="100%" onClick={this.goBack}>
-                    Go Back
+                <Button onClick={this.goBack}>
+                    &lt;&lt; Go Back
                 </Button>
             </Fragment>
         )

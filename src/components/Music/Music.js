@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import Search from '../Search/Search';
 import SongsList from '../SongsList/SongsList';
+import styled from 'styled-components';
 import axios from 'axios';
 import { connect } from 'react-redux';
 
@@ -12,12 +13,36 @@ import withFooter from '../hoc/withFooter'
 
 const API_KEY = '0b752c3927e93e737ebf660eb430c83d';
 
+const ViewMoreCard = styled.div`
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    position: relative;
+    border: 1px solid #DDD;
+    min-height: 174px;
+    min-width: 174px;
+    margin: 2px;
+    background-color: green;
+    color: white;
+    cursor: pointer;
+    &:hover {
+        background-color: #002900f2
+    } 
+    div {
+        display: flex;
+        margin: 0 auto;
+        align-items: center;
+
+    }
+`
+
 class Music extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            debunce: 500
+            debunce: 500,
+            pageNumber: 1
         }
     }
 
@@ -31,9 +56,10 @@ class Music extends Component {
 
     getDataWithAxios(queryString) {
         this.props.onStartSearching();
-        axios.get(`http://ws.audioscrobbler.com/2.0/?method=album.search&album=${queryString}&api_key=${API_KEY}&format=json`)
+        axios.get(`http://ws.audioscrobbler.com/2.0/?method=album.search&album=${queryString}&api_key=${API_KEY}&page=${this.state.pageNumber}&format=json`)
             .then(result => {
-                this.props.onFinishSearching(result.data.results.albummatches.album);
+                this.props.onFinishSearching(result.data.results.albummatches.album,
+                    this.state.pageNumber !== 1);
                 if (result.data.results.albummatches.album.length === 0) {
                     this.props.onOpenModal();
                 }
@@ -42,7 +68,18 @@ class Music extends Component {
 
     handleChange = (str) => {
         this.props.onChangeQueryString(str);
-        this.getDataWithAxios(str);
+        this.setState(
+            { pageNumber: 1 },
+            () => { this.getDataWithAxios(this.props.queryString); }
+        )
+
+    }
+
+    viewMore = () => {
+        this.setState(
+            { pageNumber: this.state.pageNumber + 1 },
+            () => { this.getDataWithAxios(this.props.queryString) }
+        )
     }
 
     goToSelection = () => {
@@ -71,14 +108,23 @@ class Music extends Component {
 
 
 
-                <SongsList list={this.props.results} />
+                <SongsList list={this.props.results}>
+                    {this.props.results.length % 50 === 0 && this.props.results.length > 0 &&
+                        <ViewMoreCard onClick={this.viewMore}>
+                            {this.props.searching ?
+                                <div>Loading...</div> :
+                                <div>View More >></div>
+                            }
+                        </ViewMoreCard>
+                    }
+                </SongsList>
 
-                {this.props.showModal ? (
+                {this.props.showModal &&
                     <Modal onClose={this.props.onCloseModal}>
                         <h3>No results</h3>
                         <p>Please search again.</p>
                     </Modal>
-                ) : null}
+                }
             </Fragment>
         )
     }
@@ -90,8 +136,8 @@ const mapDispathToProps = dispatch => (
         onStartSearching: () => {
             dispatch(startSearch())
         },
-        onFinishSearching: (result) => {
-            dispatch(finishSearch(result))
+        onFinishSearching: (result, concat) => {
+            dispatch(finishSearch(result, concat))
         },
         onCloseModal: () => {
             dispatch(closeModal())
@@ -116,5 +162,5 @@ const mapStateToProps = state => (
 )
 
 export default connect(mapStateToProps, mapDispathToProps)(
-   withFooter(Music, 30)
+    withFooter(Music, 30)
 );

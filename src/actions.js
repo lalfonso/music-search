@@ -18,11 +18,12 @@ export const startSearch = () => ({
     type: START_SEARCH
 })
 
-export const finishSearch = (results) => {
+export const finishSearch = (results, concat) => {
     return {
         type: FINISH_SEARCH,
         payload: {
-            results
+            results,
+            concat
         }
     }
 }

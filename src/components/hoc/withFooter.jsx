@@ -19,7 +19,7 @@ const withFooter = (WrapperComponent, height) => (
         <Fragment>
             <WrapperComponent {...props} />
             <Footer height={height}>
-                Footer
+                React.js training
             </Footer>
         </Fragment>
     )

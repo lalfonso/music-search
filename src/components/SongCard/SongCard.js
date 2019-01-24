@@ -29,7 +29,7 @@ const CardDescription = styled.div`
     left: ${props => props.left}px;
     top: ${props => props.top}px;
     bottom: ${props => props.bottom}px;
-    text-shadow: 0 0 10px rgba(0,0,0,.8);
+    text-shadow: 0 0 10px rgba(0,0,0,1);
     z-index: 1;
 `
 

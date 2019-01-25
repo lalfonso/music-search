@@ -42,58 +42,56 @@ const LinkDescription = styled(CardDescription)`
         color: #EEE;
     }
 `
-class SongCard extends React.Component {
+const SongCard = (props) => {
 
-    isSelected(item) {
-        return this.props.selection.find(
+    const isSelected = (item) => {
+        return props.selection.find(
             (selected) => (
                 item.artist + item.name === selected.artist + selected.name
             )
         )
     }
 
-    render() {
-        return (
-            <Card>
-                {this.props.item && this.props.item.image[2]['#text'] && 
-                    <img src={this.props.item.image[2]['#text']} alt={this.props.item.name}/>
-                }
-                
-                {!this.isSelected(this.props.item) && 
-                    <ClickableDescription
-                        left="20"
-                        top="20"
-                        size="24"
-                        onClick={this.props.onAddToList}
-                    >Add
-                    </ClickableDescription>
-                }
-                {this.isSelected(this.props.item) && 
-                    <ClickableDescription
-                        left="20"
-                        top="20"
-                        size="24"
-                        onClick={this.props.onRemoveFromList}
-                    >Remove
-                    </ClickableDescription>
-                }
-                <CardDescription
-                    left="20"
-                    bottom="35"
-                    size="14"
-                >{this.props.item.artist}
-                </CardDescription>
+    return (
+        <Card>
+            {props.item && props.item.image[2]['#text'] &&
+                <img src={props.item.image[2]['#text']} alt={props.item.name} />
+            }
 
-                <LinkDescription
+            {!isSelected(props.item) &&
+                <ClickableDescription
                     left="20"
-                    bottom="20"
-                >
-                    <Link to={`/detail/${this.props.item.artist}/${this.props.item.name}`}>{this.props.item.name}</Link>
+                    top="20"
+                    size="24"
+                    onClick={props.onAddToList}
+                >Add
+                </ClickableDescription>
+            }
+            {isSelected(props.item) &&
+                <ClickableDescription
+                    left="20"
+                    top="20"
+                    size="24"
+                    onClick={props.onRemoveFromList}
+                >Remove
+                </ClickableDescription>
+            }
+            <CardDescription
+                left="20"
+                bottom="35"
+                size="14"
+            >{props.item.artist}
+            </CardDescription>
 
-                </LinkDescription>
-            </Card>
-        )
-    }
+            <LinkDescription
+                left="20"
+                bottom="20"
+            >
+                <Link to={`/detail/${props.item.artist}/${props.item.name}`}>{props.item.name}</Link>
+
+            </LinkDescription>
+        </Card>
+    )
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {

@@ -7,7 +7,6 @@ const initialState = {
     searching: false,
     showModal: false,
     queryString: "",
-    pageNumber: 1,
     modalMessage: null
 }
 
@@ -56,8 +55,7 @@ export const reducer = (state = initialState, action) => {
             });
         case actionTypes.CHANGE_QS:
             return Object.assign({}, state, {
-                queryString: action.payload.queryString,
-                pageNumber: action.payload.pageNumber
+                queryString: action.payload.queryString
             });
         default: return state;
     }

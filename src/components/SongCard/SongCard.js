@@ -96,10 +96,10 @@ const SongCard = (props) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
-        'onAddToList': () => {
+        onAddToList: () => {
             dispatch(addToList(ownProps.item))
         },
-        'onRemoveFromList': () => {
+        onRemoveFromList: () => {
             dispatch(removeFromList(ownProps.item))
         }
     }

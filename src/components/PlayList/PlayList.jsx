@@ -28,12 +28,12 @@ class PlayList extends Component {
                 </Header>
                 <SongsList list={this.props.selection} />
 
-                {this.props.showModal ? (
+                {this.props.showModal &&
                     <Modal onClose={this.props.onCloseModal}>
                         <h3>Sorry. No items in the playlist</h3>
                         <div className="button" onClick={this.goBack}></div>
                     </Modal>
-                ) : null}
+                }
                 <Button onClick={this.goBack}>
                     &lt;&lt; Go Back
                 </Button>
@@ -43,7 +43,7 @@ class PlayList extends Component {
 }
 
 
-const mapDispathToProps = dispatch => (
+const mapDispatchToProps = dispatch => (
     {
         onCloseModal: () => {
             dispatch(closeModal())
@@ -67,4 +67,4 @@ const mapStateToProps = state => (
     }
 )
 
-export default connect(mapStateToProps, mapDispathToProps)(withFooter(PlayList, 30));
+export default connect(mapStateToProps, mapDispatchToProps)(withFooter(PlayList, 30));

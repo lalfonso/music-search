@@ -21,8 +21,6 @@ const DetailHeader = styled.div`
     background-color: ${HEADER_COLOR};
     display: flex;
 `
-const ImageContainer = styled.div`
-`
 
 const TextContainer = styled.div`
     flex: 1 auto;
@@ -71,11 +69,11 @@ class Detail extends React.Component {
         return (
             <Fragment>
                 <DetailHeader>
-                    <ImageContainer>
+                    <div>
                         {this.state.albumDetails &&
                             <img src={this.state.albumDetails.image[3]['#text']} alt={this.props.match.params.album} />
                         }
-                    </ImageContainer>
+                    </div>
                     <TextContainer>
                         <h1>Artist: {this.props.match.params.artist}</h1>
                         <h2>Album Name: {this.props.match.params.album}</h2>

@@ -8,16 +8,47 @@ const ListWrapper = styled.div`
     justify-content: flex-start;
 `;
 
-function SongsList(props) {
+const ViewMoreCard = styled.div`
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    position: relative;
+    border: 1px solid #DDD;
+    min-height: 174px;
+    min-width: 174px;
+    margin: 2px;
+    background-color: green;
+    color: white;
+    cursor: pointer;
+    &:hover {
+        background-color: #002900f2
+    } 
+    div {
+        display: flex;
+        margin: 0 auto;
+        align-items: center;
+
+    }
+`
+
+function SongsList({ list, viewMore, searching }) {
     return (
         <ListWrapper>
-            {props.list && props.list.map((item, idx) =>
+            {list && list.map((item, idx) =>
                 <SongCard
                     key={`${item.artist} ${item.name}`}
                     item={item}
                 ></SongCard>
             )}
-            {props.children}
+
+            {list && list.length % 50 === 0 && list.length > 0 &&
+                <ViewMoreCard onClick={viewMore}>
+                    {searching ?
+                        <div>Loading...</div> :
+                        <div>View More >></div>
+                    }
+                </ViewMoreCard>
+            }
         </ListWrapper>
     )
 }

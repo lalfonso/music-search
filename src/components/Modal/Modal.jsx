@@ -24,6 +24,7 @@ class Modal extends React.Component {
                     justifyContent: 'center',
                     alignItems: 'center',
                     backgroundColor: 'rgba(0,0,0,0.3)',
+                    zIndex: 2
                 }}
                 onClick={this.props.onClose}
             >

@@ -2,39 +2,14 @@ import React, { Component, Fragment } from 'react';
 import Search from '../Search/Search';
 import SongsList from '../SongsList/SongsList';
 import styled from 'styled-components';
-import axios from 'axios';
 import { connect } from 'react-redux';
 
-import { startSearch, finishSearch, openModal, closeModal, changeQS } from '../../actions';
+import { search, closeModal, changeQS } from '../../actions';
+import { IModalMessage } from '../Modal/modalMessages';
 import { Button } from '../Styled/Button';
 import { Header } from '../Styled/Header';
 import Modal from '../Modal/Modal';
-import withFooter from '../hoc/withFooter'
-
-const API_KEY = '0b752c3927e93e737ebf660eb430c83d';
-
-const ViewMoreCard = styled.div`
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-start;
-    position: relative;
-    border: 1px solid #DDD;
-    min-height: 174px;
-    min-width: 174px;
-    margin: 2px;
-    background-color: green;
-    color: white;
-    cursor: pointer;
-    &:hover {
-        background-color: #002900f2
-    } 
-    div {
-        display: flex;
-        margin: 0 auto;
-        align-items: center;
-
-    }
-`
+import withFooter from '../hoc/withFooter';
 
 class Music extends Component {
 
@@ -46,39 +21,23 @@ class Music extends Component {
         }
     }
 
-    getDataWithFecth(queryString) {
-        fetch(`http://ws.audioscrobbler.com/2.0/?method=album.search&album=${queryString}&api_key=0b752c3927e93e737ebf660eb430c83d&format=json`)
-            .then(response => {
-                return response.json();
-            })
-            .then(result => console.log(result));
-    }
-
-    getDataWithAxios(queryString) {
-        this.props.onStartSearching();
-        axios.get(`http://ws.audioscrobbler.com/2.0/?method=album.search&album=${queryString}&api_key=${API_KEY}&page=${this.state.pageNumber}&format=json`)
-            .then(result => {
-                this.props.onFinishSearching(result.data.results.albummatches.album,
-                    this.state.pageNumber !== 1);
-                if (result.data.results.albummatches.album.length === 0) {
-                    this.props.onOpenModal();
-                }
-            })
-    }
-
-    handleChange = (str) => {
-        this.props.onChangeQueryString(str);
+    search = (str) => {
+        debugger
         this.setState(
             { pageNumber: 1 },
-            () => { this.getDataWithAxios(this.props.queryString); }
+            () => {
+                this.props.onChangeQueryString(str);
+                this.props.onSearch(str, this.state.pageNumber);
+            }
         )
-
     }
 
     viewMore = () => {
         this.setState(
             { pageNumber: this.state.pageNumber + 1 },
-            () => { this.getDataWithAxios(this.props.queryString) }
+            () => {
+                this.props.onSearch(this.props.queryString, this.state.pageNumber)
+            }
         )
     }
 
@@ -87,18 +46,19 @@ class Music extends Component {
     }
 
     render() {
+        const { searching, queryString, anySelected, showModal, modalMessage, results } = this.props;
         return (
             <Fragment>
                 <Header>
                     <Search
                         titleText="Music Search"
-                        placeholder="Plese enter a band"
-                        onChangeValue={this.handleChange}
-                        searching={this.props.searching}
+                        placeholder="Please enter a band"
+                        onChangeValue={this.search}
+                        searching={searching}
                         debunce={this.state.debunce}
-                        queryString={this.props.queryString}
+                        queryString={queryString}
                     >
-                        {this.props.anySelected &&
+                        {anySelected &&
                             <Button onClick={this.goToSelection}>
                                 View Selection
                             </Button>
@@ -106,23 +66,12 @@ class Music extends Component {
                     </Search>
                 </Header>
 
+                <SongsList list={results} searching={searching} viewMore={this.viewMore}/>
 
-
-                <SongsList list={this.props.results}>
-                    {this.props.results.length % 50 === 0 && this.props.results.length > 0 &&
-                        <ViewMoreCard onClick={this.viewMore}>
-                            {this.props.searching ?
-                                <div>Loading...</div> :
-                                <div>View More >></div>
-                            }
-                        </ViewMoreCard>
-                    }
-                </SongsList>
-
-                {this.props.showModal &&
+                {showModal &&
                     <Modal onClose={this.props.onCloseModal}>
-                        <h3>No results</h3>
-                        <p>Please search again.</p>
+                        <h3>{modalMessage.title}</h3>
+                        <p>{modalMessage.message}</p>
                     </Modal>
                 }
             </Fragment>
@@ -131,19 +80,13 @@ class Music extends Component {
 }
 
 
-const mapDispathToProps = dispatch => (
+const mapDispatchToProps = dispatch => (
     {
-        onStartSearching: () => {
-            dispatch(startSearch())
-        },
-        onFinishSearching: (result, concat) => {
-            dispatch(finishSearch(result, concat))
+        onSearch: (queryString, pageNumber) => {
+            dispatch(search(queryString, pageNumber))
         },
         onCloseModal: () => {
             dispatch(closeModal())
-        },
-        onOpenModal: () => {
-            dispatch(openModal())
         },
         onChangeQueryString: (queryString) => {
             dispatch(changeQS(queryString))
@@ -157,10 +100,11 @@ const mapStateToProps = state => (
         results: state.searchResult,
         showModal: state.showModal,
         queryString: state.queryString,
-        anySelected: state.selection.length > 0
+        anySelected: state.selection.length > 0,
+        modalMessage: state.modalMessage
     }
 )
 
-export default connect(mapStateToProps, mapDispathToProps)(
+export default connect(mapStateToProps, mapDispatchToProps)(
     withFooter(Music, 30)
 );
